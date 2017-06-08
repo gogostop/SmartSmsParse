@@ -1,0 +1,40 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.0'
+        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.5.6'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+
+        File credentialFile = file('maven.properties')
+        Properties properties = new Properties()
+        properties.load(new FileInputStream(credentialFile))
+        assert properties['mavenUsername']
+        assert properties['mavenPassword']
+        assert properties['mavenReleaseRepo']
+        assert properties['mavenSnapshotRepo']
+
+        maven {
+            credentials {
+                username properties['mavenUsername']
+                password properties['mavenPassword']
+            }
+            url properties['mavenReleaseRepo']
+        }
+
+        maven {
+            credentials {
+                username properties['mavenUsername']
+                password properties['mavenPassword']
+            }
+            url properties['mavenSnapshotRepo']
+        }
+    }
+}
